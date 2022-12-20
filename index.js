@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const userRoutes = require('./routes/user')
 
 //configure dotenv to use and retrieve needs
 dotenv.config();
@@ -15,6 +16,12 @@ mongoose.set('strictQuery', true);
 mongoose.connect(uriString)
         .then(() => console.log("Connection Mongoose Established"))
         .catch((err) => console.log(uriString));
+
+        
+// should be json friendly
+app.use(express.json());
+
+app.use('/usertest', userRoutes);
 
 // listen for changes on port
 app.listen( process.env.PORT || 5000, ()=>{
