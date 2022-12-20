@@ -14,12 +14,22 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            default: false,
+            required: true,
+        },
+        fullname: {
+            type: String,
+            required: true,
+        },
+        represents: {
+            type: String,
+        },
+        companyname: {
+            type: String,
+            default: "",
         },
         isAdmin: {
             type: Boolean,
-            required: true,
-            unique: true
+            default: false,
         },
     },
     {

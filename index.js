@@ -2,7 +2,12 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/UserRoute')
+const authRoutes = require('./routes/AuthRoute')
+const cartRoutes = require('./routes/CartRoute')
+const productRoutes = require('./routes/ProductRoute')
+const orderRoutes = require('./routes/OrderRoute')
+const categoryRoutes = require('./routes/CategoryRoute')
 
 //configure dotenv to use and retrieve needs
 dotenv.config();
@@ -21,7 +26,12 @@ mongoose.connect(uriString)
 // should be json friendly
 app.use(express.json());
 
-app.use('/usertest', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
+app.use('/cart', cartRoutes);
+app.use('/product', productRoutes);
+app.use('/order', orderRoutes);
+app.use('/category', categoryRoutes);
 
 // listen for changes on port
 app.listen( process.env.PORT || 5000, ()=>{
