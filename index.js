@@ -17,10 +17,18 @@ const listenPort = process.env.PORT;
 // set mongoose strictquering to true
 mongoose.set('strictQuery', true);
 
+// reconstruct indexes of all collections to match
+// schemas
+mongoose.connection.syncIndexes();
+
 // connect to db
-mongoose.connect(uriString)
-        .then(() => console.log("Connection Mongoose Established"))
-        .catch((err) => console.log(uriString));
+mongoose.connect(uriString, {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+            autoIndex: true
+        })
+        .then(() => console.log("Connection to MongoDB Established"))
+        .catch((err) => console.log(err));
 
         
 // should be json friendly

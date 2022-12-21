@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/mrbridge-dev/market-backend-nodejs#readme",
   "dependencies": {
+    "crypto-js": "^4.1.1",
+    "cryptojs": "^2.5.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.8.0",

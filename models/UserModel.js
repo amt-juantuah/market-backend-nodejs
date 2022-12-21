@@ -5,11 +5,13 @@ const userSchema = new mongoose.Schema(
         username: {
             type: String,
             required: true,
+            index: true,
             unique: true
         },
         email: {
             type: String,
             required: true,
+            index: true,
             unique: true
         },
         password: {
@@ -34,7 +36,14 @@ const userSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+    },
+    {
+        collection: "users"
     }
 );
 
-module.exports = mongoose.model("userModel", userSchema);
+const userModel = mongoose.model('userModel', userSchema);
+
+userModel.createIndexes();
+
+module.exports = userModel;
