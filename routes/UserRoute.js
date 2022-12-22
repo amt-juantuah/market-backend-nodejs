@@ -53,7 +53,7 @@ router.put('/:id', tokenMiddleware, async (req, res) => {
     }
 })
 
-
+// USER DELETE INFO
 // users with valid token should be able to delete their record
 router.delete("/:id", tokenMiddleware, async (req, res) => {
   
@@ -75,12 +75,13 @@ router.delete("/:id", tokenMiddleware, async (req, res) => {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: "method (:delete) failed",
+        message: "method (:delete) failed. Could not delete",
         reason: error,
       });
     }
 })
 
+// DELETE ANY USER'S RECORD
 // admin with valid admin status and token should be able to 
 // delete any users record
 router.delete("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
@@ -103,13 +104,13 @@ router.delete("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: "method (:delete) failed",
+        message: "method (:delete) failed. Could not delete the user record",
         reason: error,
       });
     }
 })
 
-
+// FIND A USER
 // admin with valid admin status and token should be able to 
 // get a different user from db
 router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
@@ -132,20 +133,19 @@ router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "method (:get) failed",
+      message: "method (:get) failed. Could not get user",
       reason: error,
     });
   }
 })
 
 
-
+// ALL USERS
 // admin with valid admin status and token should be able to 
 // get all users from db
-router.get("/users/admin/:id", adminAndTokenMiddleware, async (req, res) => {
+router.get("/admin/all/:id", adminAndTokenMiddleware, async (req, res) => {
   try {
     const foundUsers = await userModel.find({});
-    console.log(foundUsers);
     if (foundUsers) {
       // const { password, ...others } = foundUser._doc;
       res.status(200).json({
@@ -154,7 +154,6 @@ router.get("/users/admin/:id", adminAndTokenMiddleware, async (req, res) => {
         data: foundUsers,
       });
     } else {
-      console.log("foundUsers");
       res.status(500).json({
         success: false,
         message: "method (:get) failed",
@@ -164,7 +163,54 @@ router.get("/users/admin/:id", adminAndTokenMiddleware, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "method (:get) failed",
+      message: "method (:get) failed. Could not find all",
+      reason: error,
+    });
+  }
+})
+
+// USER STATISTICS
+// admin with valid admin status and token should be able to 
+// get all statistics of users from db
+router.get("/admin/stats/:id", adminAndTokenMiddleware, async (req, res) => {
+  
+  // find date for last year today
+  const date = new Date();
+  lastYearToday = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  try {
+
+    const dataAggregate = await userModel.aggregate([
+      {
+        $match: { createdAt: { $gte: lastYearToday } }
+      },
+      {
+        $project: { month: { $month: "$createdAt" } }
+      },
+      {
+        $group: { _id: "$month", total: { $sum: 1 } }
+      }
+    ])
+
+    if (dataAggregate) {
+      // const { password, ...others } = foundUser._doc;
+      res.status(200).json({
+        success: true,
+        message: "method (:get) was successful",
+        data: dataAggregate,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "method (:get) failed",
+        reason: "user stats not found",
+      });
+    }
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "method (:get) failed. Could not retrieve user statistics",
       reason: error,
     });
   }
