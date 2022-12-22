@@ -19,7 +19,7 @@ mongoose.set('strictQuery', true);
 
 // reconstruct indexes of all collections to match
 // schemas
-mongoose.connection.syncIndexes();
+// mongoose.connection.syncIndexes();
 
 // connect to db
 mongoose.connect(uriString, {

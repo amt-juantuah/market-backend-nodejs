@@ -142,9 +142,9 @@ router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
 
 // admin with valid admin status and token should be able to 
 // get all users from db
-router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
+router.get("/users/admin/:id", adminAndTokenMiddleware, async (req, res) => {
   try {
-    const foundUsers = await userModel.find();
+    const foundUsers = await userModel.find({});
     console.log(foundUsers);
     if (foundUsers) {
       // const { password, ...others } = foundUser._doc;
