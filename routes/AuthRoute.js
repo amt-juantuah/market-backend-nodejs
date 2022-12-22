@@ -70,8 +70,11 @@ router.post("/login", async (req, res) => {
   }
 
   try {
+  
+    // find the user from the db
       const user = await userModel.findOne({ username: req.body.username});
       
+      // if user is not present, send an error message
       if (!user) {
         res.status(401).json({
           success: false,
@@ -79,8 +82,11 @@ router.post("/login", async (req, res) => {
           error: "Unauthenticated!"
         })
       } else {
+        // decrypt the password of the user in the db
         const decrypted = CryptoJS.AES.decrypt(user.password, process.env.PHRASE).toString(CryptoJS.enc.Utf8);
 
+        // compare the decrypted password with the password used in login
+        // if the two are same, then log the user in, else dont
         if (decrypted !== req.body.password) {
           res.status(401).json({
             success: false,
@@ -88,11 +94,23 @@ router.post("/login", async (req, res) => {
             error: "Unauthenticated!"
           })
         } else {
+
+          // provide JWT access token to user
+          const accessToken = JWT.sign(
+            {
+              id: user._id,
+              isAdmin: user.isAdmin,
+            },
+            process.env.JWT_SK,
+            { expiresIn: "3d"}
+          );
+          // strip password out and send other details to frontend
           const { password, ...others } = user._doc;
           res.status(200).json({
             success: true,
             message: "Login successful",
-            data: others
+            data: others,
+            token: accessToken
           })
         }
       }
