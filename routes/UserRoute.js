@@ -11,6 +11,34 @@ router.put('/:id', authAndTokenMiddleware, async (req, res) => {
         req.body.password,
         process.env.PHRASE
       ).toString();
+
+      req.body.password = encryptPassword;
+    }
+
+    try {
+      // update the user information
+      const updatedUser = await userModel.findByIdAndUpdate(
+        req.user.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+
+      // strip password out
+      const { password, ...others } = updatedUser._doc;
+
+      res.status(200).json({
+        success: true,
+        message: "update was successfully",
+        data: others,
+      });
+    } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "update failed",
+          reason: error,
+        });
     }
 })
 

@@ -40,13 +40,11 @@ router.post("/register", async (req, res) => {
     // save the new user if exists
     const savedUser = await newUser.save();
     const { password, ...others } = savedUser._doc;
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "user created successfully",
-        data: others
-      });
+    res.status(201).json({
+      success: true,
+      message: "user created successfully",
+      data: others,
+    });
 
   } catch (error) {
     res

@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken');
 
 const tokenMiddleware = ( req, res, next ) => {
   // access the token from the request headers
-  const authToken = req.headers.token;
+  const authToken = req.headers.token.split(" ")[1];
 
   if (!authToken) {
     res.status(401).json({
@@ -11,6 +11,7 @@ const tokenMiddleware = ( req, res, next ) => {
       error: "Unauthenticated!",
     });
   } else {
+    console.log("checking jwt verification")
     JWT.verify(authToken, process.env.JWT_SK, (error, data) => {
       if (error) {
         res.status(403).json({
@@ -30,7 +31,7 @@ const tokenMiddleware = ( req, res, next ) => {
 
 const authAndTokenMiddleware = ( req, res, next ) => {
     tokenMiddleware(req, res, () => {
-        if (req.user.id === req.params && req.user.isAdmin) {
+        if (req.user.id === req.params.id && req.user.isAdmin) {
             next();
         } else {
             res.status(403).json({
