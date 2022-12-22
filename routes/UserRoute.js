@@ -138,6 +138,38 @@ router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
   }
 })
 
+
+
+// admin with valid admin status and token should be able to 
+// get all users from db
+router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
+  try {
+    const foundUsers = await userModel.find();
+    console.log(foundUsers);
+    if (foundUsers) {
+      // const { password, ...others } = foundUser._doc;
+      res.status(200).json({
+        success: true,
+        message: "method (:get) was successful",
+        data: foundUsers,
+      });
+    } else {
+      console.log("foundUsers");
+      res.status(500).json({
+        success: false,
+        message: "method (:get) failed",
+        reason: "user account not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "method (:get) failed",
+      reason: error,
+    });
+  }
+})
+
 module.exports = router
 
 /*
