@@ -1,5 +1,9 @@
 const JWT = require('jsonwebtoken');
 
+// users should be able to do certain things
+// like update their records and others
+// but this middleware will check if they have a
+// valid token to do that
 const tokenMiddleware = ( req, res, next ) => {
   // access the token from the request headers
   const authToken = req.headers.token.split(" ")[1];
@@ -11,7 +15,7 @@ const tokenMiddleware = ( req, res, next ) => {
       error: "Unauthenticated!",
     });
   } else {
-    console.log("checking jwt verification")
+    // verify the token provided
     JWT.verify(authToken, process.env.JWT_SK, (error, data) => {
       if (error) {
         res.status(403).json({
@@ -22,16 +26,27 @@ const tokenMiddleware = ( req, res, next ) => {
         });
       } else if (data) {
         req.user = data;
-        next();
+        if (req.user.id !== req.params.id) {
+          res.status(500).json({
+            success: false,
+            message: "Client not authenticated. Wrong ID provided",
+            reason: "id is not correct",
+          });
+        } else {
+          next();
+        }
       }
     });
   }
 }
 
-
-const authAndTokenMiddleware = ( req, res, next ) => {
+// admins should be able to do certain things
+// like add products and delete products and others
+// but this middleware will check if they have a
+// valid token to do that and if they are admins indeed
+const adminAndTokenMiddleware = ( req, res, next ) => {
     tokenMiddleware(req, res, () => {
-        if (req.user.id === req.params.id && req.user.isAdmin) {
+        if (req.user.isAdmin) {
             next();
         } else {
             res.status(403).json({
@@ -44,4 +59,4 @@ const authAndTokenMiddleware = ( req, res, next ) => {
     });
 }
 
-module.exports = { tokenMiddleware, authAndTokenMiddleware }; 
+module.exports = { tokenMiddleware, adminAndTokenMiddleware }; 

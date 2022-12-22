@@ -122,11 +122,3 @@ router.post("/login", async (req, res) => {
 })
 
 module.exports = router;
-
-/*
-201: created successfully
-400: bad request from client
-401: Unauthenticated--not authenticated (client identity not known to server)
-403: Forbidden (client identity known to server but client not authorised to access resource)
-
-*/ 
