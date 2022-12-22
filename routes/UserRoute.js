@@ -112,11 +112,11 @@ router.delete("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
 
 // admin with valid admin status and token should be able to 
 // get a different user from db
-router.get("/:id", tokenMiddleware, async (req, res) => {
+router.get("/admin/:id", adminAndTokenMiddleware, async (req, res) => {
   try {
     const foundUser = await userModel.findById(req.body.getId);
     if (foundUser) {
-      const { password, ...others } = foundUser._;
+      const { password, ...others } = foundUser._doc;
       res.status(200).json({
         success: true,
         message: "method (:get) was successful",

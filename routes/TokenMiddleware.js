@@ -6,8 +6,10 @@ const JWT = require('jsonwebtoken');
 // valid token to do that
 const tokenMiddleware = ( req, res, next ) => {
   // access the token from the request headers
-  const authToken = req.headers.token.split(" ")[1];
 
+  const token = req.headers.token;
+
+  const authToken = token ? token.split(" ")[1] : undefined;
   if (!authToken) {
     res.status(401).json({
       success: false,
