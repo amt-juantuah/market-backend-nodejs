@@ -7,7 +7,7 @@ const JWT = require('jsonwebtoken');
 
 dotenv.config();
 
-/* ROUTER FOR SIGNING OR REGISTERING A NEW USER */
+/* ROUTER FOR SIGNING UP OR REGISTERING A NEW USER */
 // register a new user
 router.post("/register", async (req, res) => {
 

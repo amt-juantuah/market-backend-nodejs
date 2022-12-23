@@ -12,7 +12,6 @@ const categoryRoutes = require('./routes/CategoryRoute')
 //configure dotenv to use and retrieve needs
 dotenv.config();
 const uriString = process.env.MONGO_URL1 + process.env.MONGO_PASS + process.env.MONGO_URL2;
-const listenPort = process.env.PORT;
 
 // set mongoose strictquering to true
 mongoose.set('strictQuery', true);

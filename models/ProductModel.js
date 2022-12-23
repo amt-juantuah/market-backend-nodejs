@@ -18,7 +18,8 @@ const productSchema = new mongoose.Schema(
         title: {
             type: String,
             required: true,
-            unique: true,
+            index: true,
+            unique: true
         },
         price: {
             type: Number,
@@ -30,6 +31,7 @@ const productSchema = new mongoose.Schema(
         },
         discount: {
             type: Number,
+            default: 0,
         },
         volumeperpiece: {
             type: String,

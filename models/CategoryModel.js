@@ -13,6 +13,8 @@ const categorySchema = new mongoose.Schema(
         title: {
             type: String,
             required: true,
+            index: true,
+            unique: true
         },
     },
     {
