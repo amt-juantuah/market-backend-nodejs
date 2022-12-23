@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const categoryModel = require('../models/CategoryModel');
-const { tokenMiddleware, adminAndTokenMiddleware } = require('./tokenMiddleware');
+const { adminAndTokenMiddleware } = require('./tokenMiddleware');
 
 // CREATE CATEGORY
 // only admin can create a new category

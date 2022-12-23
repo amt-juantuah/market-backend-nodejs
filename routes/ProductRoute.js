@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const productModel = require('../models/ProductModel');
-const { tokenMiddleware, adminAndTokenMiddleware } = require('./tokenMiddleware');
+const { adminAndTokenMiddleware } = require('./tokenMiddleware');
 
 // CREATE PRODUCT
 // only admin can create a new product
