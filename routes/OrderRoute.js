@@ -154,26 +154,49 @@ router.get("/admin/stats/:id", adminAndTokenMiddleware, async (req, res) => {
     lastYearToday = new Date(date.setFullYear(date.getFullYear() - 1));
   
     try {
+
+      const productAggregate = await orderModel.aggregate([
+        {
+          $match: { createdAt: { $gte: lastYearToday } }
+        },
+        {
+          $unwind: "$products"
+        },        
+        {
+          $group: { _id: {id: "$products.productId", name: "$products.productName", unitprice: "$products.unitprice", month: {$month: "$createdAt"}, year: {$year: "$createdAt"}}, qty: { $sum: "$products.quantity"}}
+        },
+        {
+          $group: { _id: {month: "$_id.month", year: "$_id.year"}, products: { $push: {id: "$_id.id", name: "$_id.name", qty: "$qty", unitprice: "$_id.unitprice"}} }
+        },
+        {
+          $sort: {"_id.year": -1, "_id.month": -1 }
+        }
+      ])
   
       const dataAggregate = await orderModel.aggregate([
         {
           $match: { createdAt: { $gte: lastYearToday } }
         },
         {
-          $project: { month: { $month: "$createdAt" }, sales: "$amount", products: "$products" },
+          $project: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" }, sales: "$amount" },
         },
         {
-          $group: { _id: "$month", count: { $sum: 1}, total: { $sum: "$sales" } }
+          $group: { _id: {month: "$month", year: "$year"}, countOfOrders: { $sum: 1}, totalMoneyValue: { $sum: "$sales" } }
+        },
+        {
+          $sort: {"_id.year": -1, "_id.month": -1 }
         }
       ])
+
   
       if (dataAggregate) {
         // const { password, ...others } = foundUser._doc;
         res.status(200).json({
           success: true,
           message: "method (:get) was successful",
-          title: "A Year Today Sales Per Month",
-          data: dataAggregate,
+          title: "A Year Today Orders Per Month",
+          OrderSummary: dataAggregate,
+          productsDetail: productAggregate,
         });
       } else {
         res.status(500).json({
