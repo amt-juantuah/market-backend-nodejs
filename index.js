@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const userRoutes = require('./routes/UserRoute')
 const authRoutes = require('./routes/AuthRoute')
 const cartRoutes = require('./routes/CartRoute')
@@ -32,6 +33,8 @@ mongoose.connect(uriString, {
         
 // should be json friendly
 app.use(express.json());
+
+app.use(cors());
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);

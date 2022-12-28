@@ -5,8 +5,7 @@ const productSchema = new mongoose.Schema(
         img: {
             type: String,
             required: true,
-        },
-
+        }, 
         category: {
             type: Array,
             required: true,
@@ -21,7 +20,7 @@ const productSchema = new mongoose.Schema(
             index: true,
             unique: true
         },
-        price: {
+        unitprice: {
             type: Number,
             required: true,
         },
@@ -44,6 +43,10 @@ const productSchema = new mongoose.Schema(
         skuquantity: {
             type: Number,
             required: true,
+        },
+        inStock: {
+            type: Boolean,
+            default: true,
         }
     },
     {

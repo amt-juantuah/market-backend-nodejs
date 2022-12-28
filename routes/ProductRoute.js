@@ -7,7 +7,7 @@ const { adminAndTokenMiddleware } = require('./tokenMiddleware');
 router.post('/:id', adminAndTokenMiddleware, async (req, res) => {
 
     if (!req.body.img || !req.body.category || !req.body.description 
-        || !req.body.title || !req.body.price || !req.body.source 
+        || !req.body.title || !req.body.unitprice || !req.body.source 
         || !req.body.volumeperpiece || !req.body.sku || !req.body.skuquantity) {
             res.status(400).json({
               success: false,
@@ -140,13 +140,13 @@ router.get("/", async (req, res) => {
     } else if (!queryIsNew && queryIsCategory) {
         products = await productModel.find({
             category: {
-                $in: [queryIsCategory]
+                $in: [queryIsCategory, queryIsCategory.split("_")[0]]
             }
         });
     } else if (queryIsNew && queryIsCategory) {
         products = await productModel.find({
             category: {
-                $in: [queryIsCategory]
+                $in: [queryIsCategory, queryIsCategory.split("_")[0]]
             }
         }).sort({createdAt: -1}).limit(20);
     } else {
